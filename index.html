@@ -22,6 +22,7 @@
       --scale: 1;
       &.hidden {
         --scale: 0;
+        /* Hiding so that contained elements cannot get focus: */
         visibility: hidden;
       }
       margin-top: calc(var(--scale) * 16px);
