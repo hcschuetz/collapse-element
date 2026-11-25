@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Collapse Transition</title>
+  <style>
+    @property --scale {
+      syntax: '<number>';
+      inherits: false;
+      initial-value: 1;
+    }
+
+    body {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    #outer {
+      margin-top: calc(var(--scale) * 16px);
+      transform-origin: top;
+      --scale: 1;
+      transform: scaleY(var(--scale));
+      transition: --scale 0.5s ease-in-out, visibility 0.5s;
+      &.hidden {
+        --scale: 0;
+        visibility: hidden;
+      }
+    }
+
+    #inner, #later {
+      background: #eee;
+      border: 1px solid #888;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    #later {
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <label><input type="checkbox" id="hide-checkbox"> Hide Element</label>
+
+  <div id="outer">
+    <div id="inner">
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        Voluptates, similique veniam suscipit molestias enim tempora quaerat
+        accusantium ea aut tenetur dolorum iure vitae eius quibusdam.
+        Optio possimus suscipit hic distinctio?
+      </p>
+      <input type="text" id="">
+    </div>
+  </div>
+
+  <div id="later">
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      Ratione animi, necessitatibus consectetur magni dolores perspiciatis fuga,
+      vero cupiditate dicta et accusamus eos voluptate iusto!
+      Aliquam magnised ipsum ut quae!
+    </p>
+    <input type="text" id="">
+  </div>
+
+  <script>
+    const hideCheckbox = document.getElementById('hide-checkbox');
+    const outer = document.getElementById('outer');
+    const inner = document.getElementById('inner');
+
+    // Reset possibly preserved checkbox state after a page reload:
+    hideCheckbox.checked = false;
+
+    hideCheckbox.addEventListener('change', () =>
+      outer.classList.toggle('hidden', hideCheckbox.checked)
+    );
+
+    new ResizeObserver(entries =>  entries.forEach(entry => {
+      if (entry.target !== inner) {
+        console.warn('Unexpected target in ResizeObserver:', entry.target);
+        return;
+      }
+      const innerHeight = entry.borderBoxSize[0].blockSize;
+      outer.style.height = `calc(var(--scale) * ${innerHeight}px)`;
+    })).observe(inner);
+  </script>
+</body>
+</html>
