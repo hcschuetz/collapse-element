@@ -12,21 +12,22 @@
     }
 
     body {
+      font-family: Arial, Helvetica, sans-serif;
       max-width: 500px;
       margin: 40px auto;
       padding: 0 20px;
     }
 
     #outer {
-      margin-top: calc(var(--scale) * 16px);
-      transform-origin: top;
       --scale: 1;
-      transform: scaleY(var(--scale));
-      transition: --scale 0.5s ease-in-out, visibility 0.5s;
       &.hidden {
         --scale: 0;
         visibility: hidden;
       }
+      margin-top: calc(var(--scale) * 16px);
+      transform-origin: top;
+      transform: scaleY(var(--scale));
+      transition: --scale 0.5s ease-in-out, visibility 0.5s;
     }
 
     #inner, #later {
@@ -79,13 +80,10 @@
     );
 
     new ResizeObserver(entries =>  entries.forEach(entry => {
-      if (entry.target !== inner) {
-        console.warn('Unexpected target in ResizeObserver:', entry.target);
-        return;
-      }
       const innerHeight = entry.borderBoxSize[0].blockSize;
       outer.style.height = `calc(var(--scale) * ${innerHeight}px)`;
-    })).observe(inner);
+    }))
+    .observe(inner);
   </script>
 </body>
 </html>
